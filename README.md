@@ -12,4 +12,4 @@ On December 31st, 2019, an infectious disease outbreak in Wuhan, China was first
 
 * **Date**: Tuesday, March 31, 2020
 * **Time**: 11:00 AM
-** **Location**: Online (via Ryerson Zoom)
+* **Location**: Online (via Ryerson Zoom)
