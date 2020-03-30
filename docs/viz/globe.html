@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>COVID19 Summary</title>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+</head>
+<style type="text/css">
+
+.water {
+  fill: #FFF;
+  stroke: #000;
+  stroke-width: 0.7px;
+}
+
+.land {
+  fill: #FFF;
+  stroke: #000;
+  stroke-width: 0.5px;
+  cursor: move;
+}
+
+.focused {
+  fill: #c00000;
+}
+
+html {
+  text-align: center;
+}
+
+</style>
+<body margin="auto">
+    <h2 align="center"><br></h2>
+  <script>
+      
+  var width = 500,
+  height = 450,
+  sens = 0.25,
+  focused;
+
+  //Setting projection
+
+  var projection = d3.geo.orthographic()
+  .scale(225)
+  .rotate([0, 0])
+  .translate([width / 2, height / 2])
+  .clipAngle(90);
+
+  var path = d3.geo.path()
+  .projection(projection);
+
+  //SVG container
+  var title = document.body.parentElement.querySelector('h2');
+
+  var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+  //Adding water
+
+  svg.append("path")
+  .datum({type: "Sphere"})
+  .attr("class", "water")
+  .attr("d", path)
+  .call(d3.behavior.drag()
+  .origin(function() { var r = projection.rotate(); return {x: r[0] / sens, y: -r[1] / sens}; }));
+
+  var countryList = d3.select("body");
+
+
+  queue()
+  .defer(d3.json, "../data/world.json")
+  .defer(d3.tsv, "../data/countries.tsv")
+  .await(ready);
+
+  //Main function
+
+  function ready(error, world, countryData) {
+
+    var countryById = {},
+    countries = topojson.feature(world, world.objects.countries).features;
+
+    //Adding countries to select
+
+    countryData.forEach(function(d) {
+      countryById[d.id] = d.name;
+    });
+
+    //Drawing countries on the globe
+
+    var world = svg.selectAll("path.land")
+    .data(countries)
+    .enter().append("path")
+    .attr("class", "land")
+    .attr("d", path)
+    .on("click", rotateMe);
+    //Drag event
+    var idList = [];
+    var rotateMe =  function(id, text) {
+      
+      
+      var rotate = projection.rotate(),
+      focusedCountry = country(countries, id),
+      p = d3.geo.centroid(focusedCountry);
+      idList.push(id);
+      svg.selectAll(".focused").classed("focused", focused = false);
+      title.innerHTML = text;
+    //Globe rotating
+
+    (function transition() {
+      d3.transition()
+      .duration(2500)
+      .tween("rotate", function() {
+        var r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
+        return function(t) {
+          projection.rotate(r(t));
+          svg.selectAll("path").attr("d", path)
+          .classed("focused", function(d, i) { return d.id == focusedCountry.id || idList.indexOf(d.id) >= 0; });
+        };
+      })
+      })();
+    };
+    var clickCount = 0;
+    var click = function () {
+        if (clickCount == 0) {
+            rotateMe(156, "Dec. 31 / Wuhan, China / 44 cases");
+        } else if (clickCount == 1) {
+            rotateMe(764, "Jan. 20 / Thailand, Japan, Korea / 282 cases");
+            rotateMe(392, "Jan. 20 / Thailand, Japan, Korea / 282 cases");
+            rotateMe(410, "Jan. 20 / Thailand, Japan, Korea / 282 cases");
+        } else if (clickCount == 2) {
+            title.innerHTML = "Mar. 11 / Pandemic / 4292 deaths / 118, 319 cases";
+            svg.selectAll("path")
+            .attr("d", path) 
+            .transition()
+            .duration(1000)
+            .style("fill", function(d) {
+                var out = 'white';
+                if (d.id in countryById && (!idList.indexOf(d.id) >= 0)) {
+                    out = '#c00000';
+                }
+                return out;
+            });
+        } else if (clickCount == 3) {
+            rotateMe(478, "Current / > 29K deaths  / > 600K cases")
+        }
+        clickCount += 1;
+    }
+    document.getElementsByTagName('body')[0].addEventListener("click", click);
+    function country(cnt, id) { 
+      for(var i = 0, l = cnt.length; i < l; i++) {
+        if(cnt[i].id == id) {return cnt[i];}
+      }
+    };
+
+  };
+  </script>
+</body>
+</html>
