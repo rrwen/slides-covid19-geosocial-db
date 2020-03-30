@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "bower install --save",
     "build": "reveal-md SLIDES.md --template ./templates/template.html --static docs",
-    "bower": "bower"
+    "install-plugin": "bower install --save",
+    "remove-plugin": "bower uninstall --save"
   },
   "repository": {
     "type": "git",
