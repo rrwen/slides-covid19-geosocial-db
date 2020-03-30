@@ -38,6 +38,9 @@
     "tests"
   ],
   "dependencies": {
-    "reveal.js-plugins": "*"
+    "reveal.js-plugins": "*",
+    "function-plot": "^1.19.1",
+    "topojson": "^3.0.2",
+    "d3-queue": "^3.0.7"
   }
 }

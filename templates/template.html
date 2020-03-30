@@ -57,7 +57,12 @@
             { src: '{{{base}}}/plugin/zoom-js/zoom.js', async: true },
             { src: '{{{base}}}/plugin/notes/notes.js', async: true },
             { src: '{{{base}}}/plugin/math/math.js', async: true },
-            { src: '{{{base}}}/plugin/anything/anything.js' }
+            { src: '{{{base}}}/plugin/reveal.js-plugins/anything/anything.js' },
+            { src: '{{{base}}}/plugin/reveal.js-plugins/chart/Chart.min.js' },
+            { src: '{{{base}}}/plugin/d3/d3.min.js' },
+            { src: '{{{base}}}/plugin/d3-queue/d3-queue.js' },
+            { src: '{{{base}}}/plugin/topojson/topojson.min.js' },
+            { src: '{{{base}}}/plugin/function-plot/dist/function-plot.js' },
         ];
 
         // default options to init reveal.js
@@ -67,7 +72,19 @@
             history: true,
             center: true,
             transition: 'default', // none/fade/slide/convex/concave/zoom
-            dependencies: deps
+            dependencies: deps,
+            anything: [
+                {
+                    className: "chart",
+                    initialize: (function (container, options) { container.chart = new Chart(container.getContext("2d"), options); })
+                },
+                {
+                    className: "plot",
+                    defaults: { width: 500, height: 500, grid: true },
+                    initialize: (function (container, options) { options.target = "#" + container.id; functionPlot(options) })
+                },
+                {className: "anything",  initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} }) }
+            ]
         };
 
         // options from URL query string

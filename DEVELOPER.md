@@ -19,15 +19,27 @@ npm install
 
 ## Usage
 
-Build slides into `docs/` folder:
+### Serving Slides
+
+Build slides into [docs/](docs/) folder:
 
 ```
 npm run build
 ```
 
-Install or remove a `bower` plugin into `docs/plugin` folder:
+Then, serve them with `https-server`:
+
+```
+npm run server
+```
+
+### Reveal.js Plugins
+
+Install or remove a `bower` plugin into [docs/plugin](docs/plugin/) folder:
 
 ```
 npm run install-plugin <plugin-name>
 npm run remove-plugin <plugin-name>
 ```
+
+Then edit [template.html](template/template.html) accordingly.

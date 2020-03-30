@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "bower install --save",
     "build": "reveal-md SLIDES.md --template ./templates/template.html --static docs",
+    "server": "http-server ./docs",
     "install-plugin": "bower install --save",
     "remove-plugin": "bower uninstall --save"
   },
@@ -44,6 +45,7 @@
   "homepage": "https://github.com/rrwen/slides-covid19-geosocial-db#readme",
   "dependencies": {
     "bower": "^1.8.8",
+    "http-server": "^0.12.1",
     "reveal-md": "^3.4.7"
   }
 }
