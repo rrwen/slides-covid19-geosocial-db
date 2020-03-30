@@ -1,3 +1,10 @@
+body {
+    background-image: url('../img/logo.png');
+    background-repeat: no-repeat;
+    background-position: bottom+10px left+10px;
+    background-size: auto 10%, 5% 5%;
+}
+
 iframe {
     border: 0;
     overflow: hidden;
