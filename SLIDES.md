@@ -1,12 +1,16 @@
-# Title
+---
+title: A Real-time Geo-social Media Database for Large-scale Coronavirus Disease 2019 (COVID-19) Research
+theme: white
+---
 
-* Point 1
-* Point 2
+## A Geo-social Media Database for COVID-19 Research
+
+Richard Wen
+<br>rwen@ryerson.ca
+<br>March 31, 2020
 
 ---
 
 ## Second slide
 
 > Best quote ever.
-
-Note: speaker notes FTW!

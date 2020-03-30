@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "reveal-md SLIDES.md --static docs"
+    "build": "reveal-md SLIDES.md --template ./templates/template.html --static docs",
+    "bower": "bower"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
   },
   "homepage": "https://github.com/rrwen/slides-covid19-geosocial-db#readme",
   "dependencies": {
+    "bower": "^1.8.8",
     "reveal-md": "^3.4.7"
   }
 }

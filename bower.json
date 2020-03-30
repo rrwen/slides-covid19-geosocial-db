@@ -1,0 +1,40 @@
+{
+  "name": "slides-covid19-geosocial-db",
+  "description": "Presentation titled \"A Real-time Geo-social Media Database for Large-scale Coronavirus Disease 2019 (COVID-19) Research\" for my second research seminar at Ryerson University",
+  "main": "index.js",
+  "authors": [
+    "Richard Wen"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "covid19",
+    "covid",
+    "covid-19",
+    "virus",
+    "geo",
+    "social",
+    "media",
+    "data",
+    "database",
+    "postgres",
+    "postgresql",
+    "research",
+    "seminar",
+    "presentation",
+    "slides",
+    "disease",
+    "ncov-2019",
+    "ncov19",
+    "index",
+    "gis"
+  ],
+  "homepage": "https://github.com/rrwen/slides-covid19-geosocial-db",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
