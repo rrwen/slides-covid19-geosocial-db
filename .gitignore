@@ -1,3 +1,6 @@
+# Keep docs folder
+!docs/*
+
 # Logs
 logs
 *.log
@@ -102,6 +105,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# Keep docs folder
-!docs/*
