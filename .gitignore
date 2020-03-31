@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Keep docs folder
-!docs/*.keep
+!docs/*
