@@ -9,3 +9,14 @@ iframe {
     border: 0;
     overflow: hidden;
 }
+
+.lighttext {
+    color: white !important;
+}
+
+img{
+    border: 0 !important;
+    -webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+}

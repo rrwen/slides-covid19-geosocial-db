@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./css/highlight/zenburn.css" />
     <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print" />
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 </head>
 
@@ -25,7 +26,197 @@ Richard Wen
 <br>March 31, 2020
 </script></section><section  data-markdown><script type="text/template">
 ## Coronavirus (COVID-19)
+
 <iframe src="viz/globe.html" width="100%" height="550px"></iframe>
+</script></section><section  data-markdown><script type="text/template">
+# Recent Issues
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+## Public Health
+
+<div class="tweet" data-src="https://twitter.com/CPHO_Canada/status/1243720771727503373"></div>
+</script></section><section  data-markdown><script type="text/template">
+<div class="tweet" width="100%" height="450px" data-src="https://twitter.com/AndrewConstance/status/1241872088249413632"></div>
+</script></section><section  data-markdown><script type="text/template">
+## Health Care
+
+<div class="tweet" data-src="https://twitter.com/680NEWS/status/1243636056504905729"></div>
+</script></section><section  data-markdown><script type="text/template">
+<iframe src="https://ourworldindata.org/grapher/hospital-beds-per-1000-people?tab=chart" style="width: 100%; height: 600px; border: 0px none;"></iframe>
+</script></section><section  data-markdown><script type="text/template">
+## Misinformation
+
+<div class="tweet" data-src="https://twitter.com/CP24/status/1243491116974051329"></div>
+</script></section><section  data-markdown><script type="text/template">
+## Location
+
+<iframe src="https://ourworldindata.org/grapher/covid-confirmed-cases-since-100th-case" style="width: 100%; height: 450px; border: 0px none;"></iframe>
+</script></section><section  data-markdown><script type="text/template">
+# The Idea
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background-iframe="https://www.omnisci.com/demos/tweetmap" data-background-interactive -->
+</script></section><section  data-markdown><script type="text/template">
+## Objectives
+
+1. Develop a real-time Twitter geo-spatial database
+2. Optimize data for selected filters
+3. Optimize data for spatial queries
+</script></section><section  data-markdown><script type="text/template">
+# Database Considerations
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+## Twitter Stream (Mar. 4)
+
+* ~1% of tweets
+* ~50-2000 tweets/sec.
+* ~3 million tweets/day
+</script></section><section  data-markdown><script type="text/template">
+## Keywords
+
+* COVID-19
+    * e.g. #COVID19, #nCov2019, coronavirus
+* Social distancing
+    * #socialdistancing, #physicaldistancing
+</script></section><section  data-markdown><script type="text/template">
+## Est. Records (Millions)
+
+<div class="plot" id="tweetplot" style="background-color:#fff; width:800px; height:400px; margin: 0 auto;">
+<!--
+{
+ "target":"#tweetplot",
+ "height":400,
+ "width":"800",
+ "xAxis":{"domain":[0,45],"label":"Days"},
+ "yAxis":{"domain":[0,150],"label":"Records"},
+ "grid":true,
+ "data":[{"fn":"3x","color":"teal"}]
+}
+-->
+</div>
+</script></section><section  data-markdown><script type="text/template">
+## Needs
+
+1. Handle thousands of `INSERTS` / sec.
+2. Fast complex queries
+    * e.g. < 10 seconds / 1000 records
+3. Many concurrent users in research environment
+</script></section><section  data-markdown><script type="text/template">
+## PostgreSQL Database
+
+* Relational database
+* Geo-spatial support
+* Unstructured and structured data
+</script></section><section  data-markdown><script type="text/template">
+# Data Cleaning
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+### JavaScript Object Notation (JSON)
+
+```
+{
+    "id": ...,
+    "lang": "en",
+    "text": ...,
+    "user": {
+        "id": ...,
+        ...
+    },
+    "place": {...},
+    ...
+    "created_at": "Wed Mar 25 23:27:47 +0000 2020",
+    "coordinates": {...},
+    "place": null
+}
+```
+</script></section><section  data-markdown><script type="text/template">
+## Column Generation
+
+```
+{"id": 1, 
+ "geometry: {...
+        coordinates: [-90.1234,40.1234]
+    }, 
+  "created_at": "Wed Mar 25 23:27:47 +0000 2020"}
+```
+
+| tweet_id | tweet_geometry | tweet_timestamp |
+|----------|----------------|-----------------|
+| NUMERIC  | GEOMETRY       | TIMESTAMP       |
+</script></section><section  data-markdown><script type="text/template">
+## Indexing
+
+Avoid sequential scans
+
+<div class="plot" id="btreeplot" style="background-color:#fff; width:100%; height:350px; margin: 0 auto;">
+<!--
+{
+ "target":"#btreeplot",
+ "height":400,
+ "width":"800",
+ "xAxis":{"domain":[0,10],"label":"n"},
+ "yAxis":{"domain":[0,10],"label":"Time"},
+ "grid":true,
+ "data":[
+    {"fn":"log(x)","color":"teal"},
+    {"fn":"x","color":"red"}
+]}
+-->
+</div>
+</script></section><section  data-markdown><script type="text/template">
+## Balanced Tree (BTREE)
+
+![btree diagram](img/btree.png)
+</script></section><section  data-markdown><script type="text/template">
+### Generalized Inverted Index (GIN)
+
+![gin diagram](img/gin.png)
+</script></section><section  data-markdown><script type="text/template">
+### Generalized Search Tree (GIST)
+
+![gist diagram](img/gist.png)
+</script></section><section  data-markdown><script type="text/template">
+# Current Work
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+## Architecture
+
+![architecture](img/architecture.png)
+</script></section><section  data-markdown><script type="text/template">
+## Available Data
+
+* 48 generated columns
+    * ids, text, geometries, users, retweets
+    * text, geometry, timestamps indexed
+* \> 80 million tweets
+* ~500ms for small queries (100 to 1000 rows)
+</script></section><section  data-markdown><script type="text/template">
+# Next Steps
+
+<!-- .slide: data-background="black" data-background-transition="fade" -->
+</script></section><section  data-markdown><script type="text/template">
+## Limitations
+
+* Data migration allocates resources
+* Slow hard drive speed
+* Slow maintenance on large table
+</script></section><section  data-markdown><script type="text/template">
+## Future Work
+
+* Optimize for select user queries
+* Switch to Solid State Drive (SSD)
+* Partition table on weekly basis
+* Dashboard and analyses
+</script></section><section  data-markdown><script type="text/template">
+### Thanks - Stay Safe and Healthy!
+
+Richard Wen<br>
+rwen@ryerson.ca
 </script></section></div>
     </div>
 
@@ -59,6 +250,8 @@ Richard Wen
             { src: './plugin/d3-queue/d3-queue.js' },
             { src: './plugin/topojson/topojson.min.js' },
             { src: './plugin/function-plot/dist/function-plot.js' },
+            { src: './plugin/reveal.js-plugins/embed-tweet/embed-tweet.js' },
+            { src: './plugin/reveal.js-plugins/chalkboard/chalkboard.js' }
         ];
 
         // default options to init reveal.js
@@ -80,13 +273,25 @@ Richard Wen
                     initialize: (function (container, options) { options.target = "#" + container.id; functionPlot(options) })
                 },
                 {className: "anything",  initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} }) }
-            ]
+            ],
+            chalkboard: {
+                toggleNotesButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+            },
+            keyboard: {
+                67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'c' is pressed
+                66: function() { RevealChalkboard.toggleChalkboard() },	// toggle chalkboard when 'b' is pressed
+                46: function() { RevealChalkboard.clear() },	// clear chalkboard when 'DEL' is pressed
+                8: function() { RevealChalkboard.reset() },	// reset chalkboard data on current slide when 'BACKSPACE' is pressed
+                68: function() { RevealChalkboard.download() },	// downlad recorded chalkboard drawing when 'd' is pressed
+                88: function() { RevealChalkboard.colorNext() },	// cycle colors forward when 'x' is pressed
+                89: function() { RevealChalkboard.colorPrev() },	// cycle colors backward when 'y' is pressed
+            }
         };
 
         // options from URL query string
         var queryOptions = Reveal.getQueryHash() || {};
 
-        var options = extend(defaultOptions, {}, queryOptions);
+        var options = extend(defaultOptions, {"slideNumber":true}, queryOptions);
     </script>
 
 

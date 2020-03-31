@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{{base}}}{{{highlightThemeUrl}}}" />
     <link rel="stylesheet" href="{{{base}}}/css/print/{{#print}}pdf{{/print}}{{^print}}paper{{/print}}.css" type="text/css" media="print" />
     <link rel="stylesheet" href="{{{base}}}/css/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     {{#cssPaths}}
     <link rel="stylesheet" href="{{{base}}}/{{{.}}}" />
     {{/cssPaths}}
@@ -63,6 +64,8 @@
             { src: '{{{base}}}/plugin/d3-queue/d3-queue.js' },
             { src: '{{{base}}}/plugin/topojson/topojson.min.js' },
             { src: '{{{base}}}/plugin/function-plot/dist/function-plot.js' },
+            { src: '{{{base}}}/plugin/reveal.js-plugins/embed-tweet/embed-tweet.js' },
+            { src: '{{{base}}}/plugin/reveal.js-plugins/chalkboard/chalkboard.js' }
         ];
 
         // default options to init reveal.js
@@ -84,7 +87,19 @@
                     initialize: (function (container, options) { options.target = "#" + container.id; functionPlot(options) })
                 },
                 {className: "anything",  initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} }) }
-            ]
+            ],
+            chalkboard: {
+                toggleNotesButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+            },
+            keyboard: {
+                67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'c' is pressed
+                66: function() { RevealChalkboard.toggleChalkboard() },	// toggle chalkboard when 'b' is pressed
+                46: function() { RevealChalkboard.clear() },	// clear chalkboard when 'DEL' is pressed
+                8: function() { RevealChalkboard.reset() },	// reset chalkboard data on current slide when 'BACKSPACE' is pressed
+                68: function() { RevealChalkboard.download() },	// downlad recorded chalkboard drawing when 'd' is pressed
+                88: function() { RevealChalkboard.colorNext() },	// cycle colors forward when 'x' is pressed
+                89: function() { RevealChalkboard.colorPrev() },	// cycle colors backward when 'y' is pressed
+            }
         };
 
         // options from URL query string
